@@ -40,13 +40,13 @@
           <i class="ph ph-currency-circle-dollar"></i>
         </li>
         <li class="pc-item">
-          <a href="#!" class="pc-link">
+          <a href="../pagos/index.php" class="pc-link">
             <span class="pc-micon"><i class="ph ph-money"></i></span>
             <span class="pc-mtext">Pagos</span>
           </a>
         </li>
         <li class="pc-item">
-          <a href="#!" class="pc-link">
+          <a href="../reservas/index.php" class="pc-link">
             <span class="pc-micon"><i class="ph ph-calendar-check"></i></span>
             <span class="pc-mtext">Reservas de Áreas Comunes</span>
           </a>
