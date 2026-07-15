@@ -238,12 +238,7 @@
       </div>
     </div>
 <?php
-  // $extraScripts = '
-  //   <!-- [Page Specific JS] start -->
-  //   <script src="../../public/assets/js/plugins/apexcharts.min.js"></script>
-  //   <script src="../../public/assets/js/pages/dashboard-sales.js"></script>
-  //   <!-- [Page Specific JS] end -->
-  // '; NO BORRAR, SE PUEDE USAR PARA AGREGAR JS ESPECÍFICO DE LA PÁGINA
+
   include '../layouts/footer.php';
   include '../layouts/scripts.php';
 ?>

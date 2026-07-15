@@ -23,13 +23,13 @@
           <i class="ph ph-users"></i>
         </li>
           <li class="pc-item">
-          <a href="../pages/register-v1.php" class="pc-link">
+          <a href="../residentes/index.php" class="pc-link">
             <span class="pc-micon"><i class="ph ph-users-three"></i></span>
             <span class="pc-mtext">Residentes</span>
           </a>
         </li>
         <li class="pc-item">
-          <a href="#!" class="pc-link">
+          <a href="../viviendas/index.php" class="pc-link">
             <span class="pc-micon"><i class="ph ph-house-line"></i></span>
             <span class="pc-mtext">Viviendas</span>
           </a>
@@ -74,15 +74,7 @@
             <span class="pc-mtext">Mantenimiento</span>
           </a>
         </li>
-        <li class="pc-item">
-          <a href="#!" class="pc-link">
-            <span class="pc-micon"><i class="ph ph-database"></i></span>
-            <span class="pc-mtext">Base de Datos</span>
-          </a>
-        </li>
 
-        <!-- Los links de arriba son placeholders (#!). Cuando cada integrante -->
-        <!-- termine sus views, remplazaremos el href por la ruta real -->
       </ul>
     </div>
   </div>
