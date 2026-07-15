@@ -23,7 +23,7 @@
           <i class="ph ph-users"></i>
         </li>
           <li class="pc-item">
-          <a href="/Condominio_Project/views/pages/register-v1.php" class="pc-link">
+          <a href="../pages/register-v1.php" class="pc-link">
             <span class="pc-micon"><i class="ph ph-users-three"></i></span>
             <span class="pc-mtext">Residentes</span>
           </a>
@@ -57,19 +57,19 @@
           <i class="ph ph-suitcase"></i>
         </li>
         <li class="pc-item">
-          <a href="#!" class="pc-link">
+          <a href="../visitantes/index.php" class="pc-link">
             <span class="pc-micon"><i class="ph ph-identification-card"></i></span>
             <span class="pc-mtext">Visitantes</span>
           </a>
         </li>
         <li class="pc-item">
-          <a href="#!" class="pc-link">
+          <a href="../comunicados/index.php" class="pc-link">
             <span class="pc-micon"><i class="ph ph-megaphone"></i></span>
             <span class="pc-mtext">Comunicados</span>
           </a>
         </li>
         <li class="pc-item">
-          <a href="#!" class="pc-link">
+          <a href="../mantenimiento/index.php" class="pc-link">
             <span class="pc-micon"><i class="ph ph-wrench"></i></span>
             <span class="pc-mtext">Mantenimiento</span>
           </a>
