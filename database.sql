@@ -59,11 +59,11 @@ CREATE TABLE IF NOT EXISTS visitantes (
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
     hora_salida TIME NULL,
+    estado ENUM('Dentro', 'Finalizada') DEFAULT 'Dentro',
     placa VARCHAR(20),
     cantidad INT DEFAULT 1,
     motivo TEXT,
     observaciones TEXT,
-    estado ENUM('Dentro', 'Finalizada') DEFAULT 'Dentro',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
