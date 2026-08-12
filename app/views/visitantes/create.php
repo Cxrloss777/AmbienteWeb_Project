@@ -36,6 +36,7 @@ include '../app/views/layouts/topbar.php';
                             <div class="row">
 
                                 <div class="col-md-6 mb-3">
+
                                     <label for="nombre" class="form-label">
                                         Nombre Completo
                                     </label>
@@ -46,9 +47,11 @@ include '../app/views/layouts/topbar.php';
                                         id="nombre"
                                         name="nombre"
                                         required>
+
                                 </div>
 
                                 <div class="col-md-6 mb-3">
+
                                     <label for="cedula" class="form-label">
                                         Cédula
                                     </label>
@@ -59,9 +62,11 @@ include '../app/views/layouts/topbar.php';
                                         id="cedula"
                                         name="cedula"
                                         required>
+
                                 </div>
 
                                 <div class="col-md-6 mb-3">
+
                                     <label for="visitado" class="form-label">
                                         Persona a Visitar
                                     </label>
@@ -72,22 +77,39 @@ include '../app/views/layouts/topbar.php';
                                         id="visitado"
                                         name="visitado"
                                         required>
+
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="apartamento" class="form-label">
+
+                                    <label for="vivienda_id" class="form-label">
                                         Apartamento
                                     </label>
 
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="apartamento"
-                                        name="apartamento"
+                                    <select
+                                        class="form-select"
+                                        id="vivienda_id"
+                                        name="vivienda_id"
                                         required>
+
+                                        <option value="">
+                                            Seleccione una vivienda
+                                        </option>
+
+                                        <?php foreach ($data['viviendas'] as $vivienda): ?>
+
+                                            <option value="<?= $vivienda['id'] ?>">
+                                                <?= htmlspecialchars($vivienda['identificador']) ?>
+                                            </option>
+
+                                        <?php endforeach; ?>
+
+                                    </select>
+
                                 </div>
 
                                 <div class="col-md-6 mb-3">
+
                                     <label for="fecha" class="form-label">
                                         Fecha
                                     </label>
@@ -98,9 +120,11 @@ include '../app/views/layouts/topbar.php';
                                         id="fecha"
                                         name="fecha"
                                         required>
+
                                 </div>
 
                                 <div class="col-md-6 mb-3">
+
                                     <label for="hora" class="form-label">
                                         Hora de Entrada
                                     </label>
@@ -111,9 +135,11 @@ include '../app/views/layouts/topbar.php';
                                         id="hora"
                                         name="hora"
                                         required>
+
                                 </div>
 
                                 <div class="col-md-6 mb-3">
+
                                     <label for="placa" class="form-label">
                                         Placa del Vehículo
                                     </label>
@@ -123,9 +149,11 @@ include '../app/views/layouts/topbar.php';
                                         class="form-control"
                                         id="placa"
                                         name="placa">
+
                                 </div>
 
                                 <div class="col-md-6 mb-3">
+
                                     <label for="cantidad" class="form-label">
                                         Cantidad de Personas
                                     </label>
@@ -137,9 +165,11 @@ include '../app/views/layouts/topbar.php';
                                         name="cantidad"
                                         min="1"
                                         value="1">
+
                                 </div>
 
                                 <div class="col-12 mb-3">
+
                                     <label for="motivo" class="form-label">
                                         Motivo de la Visita
                                     </label>
@@ -149,9 +179,11 @@ include '../app/views/layouts/topbar.php';
                                         id="motivo"
                                         name="motivo"
                                         rows="3"></textarea>
+
                                 </div>
 
                                 <div class="col-12 mb-3">
+
                                     <label for="observaciones" class="form-label">
                                         Observaciones
                                     </label>
@@ -161,6 +193,7 @@ include '../app/views/layouts/topbar.php';
                                         id="observaciones"
                                         name="observaciones"
                                         rows="3"></textarea>
+
                                 </div>
 
                             </div>

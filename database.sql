@@ -55,16 +55,17 @@ CREATE TABLE IF NOT EXISTS visitantes (
     nombre VARCHAR(100) NOT NULL,
     cedula VARCHAR(30) NOT NULL,
     visitado VARCHAR(100) NOT NULL,
-    apartamento VARCHAR(50) NOT NULL,
+    vivienda_id INT NOT NULL,
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
     hora_salida TIME NULL,
-    estado ENUM('Dentro', 'Finalizada') DEFAULT 'Dentro',
     placa VARCHAR(20),
     cantidad INT DEFAULT 1,
     motivo TEXT,
     observaciones TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    estado ENUM('Dentro', 'Finalizada') DEFAULT 'Dentro',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (vivienda_id) REFERENCES viviendas(id)
 );
 
 -- Comunicados

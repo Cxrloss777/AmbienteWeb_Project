@@ -7,7 +7,7 @@ function validarVisitante(event) {
     const nombre = document.querySelector("#nombre").value.trim();
     const cedula = document.querySelector("#cedula").value.trim();
     const visitado = document.querySelector("#visitado").value.trim();
-    const apartamento = document.querySelector("#apartamento").value.trim();
+    const vivienda = document.querySelector("#vivienda_id").value;
     const fecha = document.querySelector("#fecha").value;
     const hora = document.querySelector("#hora").value;
     const cantidad = document.querySelector("#cantidad").value;
@@ -16,7 +16,7 @@ function validarVisitante(event) {
         nombre === "" ||
         cedula === "" ||
         visitado === "" ||
-        apartamento === "" ||
+        vivienda === "" ||
         fecha === "" ||
         hora === ""
     ) {

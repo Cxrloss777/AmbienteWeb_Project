@@ -3,6 +3,7 @@ require_once '../app/core/Controller.php';
 
 class VisitanteController extends Controller {
     private $visitanteModel;
+    private $viviendaModel;
 
     public function __construct() {
         session_start();
@@ -12,6 +13,7 @@ class VisitanteController extends Controller {
         }
 
         $this->visitanteModel = $this->model('Visitante');
+        $this->viviendaModel = $this->model('Vivienda');
     }
 
     public function index() {
@@ -23,13 +25,15 @@ class VisitanteController extends Controller {
     }
 
     public function create() {
+        $viviendas = $this->viviendaModel->getAll();
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $data = [
                 'nombre' => $_POST['nombre'] ?? '',
                 'cedula' => $_POST['cedula'] ?? '',
                 'visitado' => $_POST['visitado'] ?? '',
-                'apartamento' => $_POST['apartamento'] ?? '',
+                'vivienda_id' => $_POST['vivienda_id'] ?? '',
                 'fecha' => $_POST['fecha'] ?? '',
                 'hora' => $_POST['hora'] ?? '',
                 'placa' => $_POST['placa'] ?? '',
@@ -42,7 +46,7 @@ class VisitanteController extends Controller {
                 !empty($data['nombre']) &&
                 !empty($data['cedula']) &&
                 !empty($data['visitado']) &&
-                !empty($data['apartamento']) &&
+                !empty($data['vivienda_id']) &&
                 !empty($data['fecha']) &&
                 !empty($data['hora'])
             ) {
@@ -50,12 +54,16 @@ class VisitanteController extends Controller {
                 $this->redirect('/visitante/index');
             } else {
                 $this->view('visitantes/create', [
-                    'error' => 'Nombre, cédula, persona visitada, apartamento, fecha y hora son obligatorios'
+                    'error' => 'Nombre, cédula, persona visitada, vivienda, fecha y hora son obligatorios',
+                    'viviendas' => $viviendas
                 ]);
             }
 
         } else {
-            $this->view('visitantes/create');
+
+            $this->view('visitantes/create', [
+                'viviendas' => $viviendas
+            ]);
         }
     }
 
