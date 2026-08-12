@@ -1,8 +1,15 @@
 <?php
 $pageTitle = "Calendario de Reservas";
-    include '../app/views/layouts/header.php';
-    include '../app/views/layouts/sidebar.php';
-    include '../app/views/layouts/topbar.php';
+include '../app/views/layouts/header.php';
+include '../app/views/layouts/sidebar.php';
+include '../app/views/layouts/topbar.php';
+
+$dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+$meses = [
+    1 => 'enero', 2 => 'febrero', 3 => 'marzo', 4 => 'abril',
+    5 => 'mayo', 6 => 'junio', 7 => 'julio', 8 => 'agosto',
+    9 => 'septiembre', 10 => 'octubre', 11 => 'noviembre', 12 => 'diciembre'
+];
 ?>
 
 <div class="pc-container">
@@ -15,118 +22,78 @@ $pageTitle = "Calendario de Reservas";
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <div>
                             <h5 class="mb-1">Calendario de Reservas</h5>
-                            <p class="text-muted mb-0">Vista sencilla de las próximas actividades.</p>
+                            <p class="text-muted mb-0">Fechas y horarios que ya se encuentran reservados.</p>
                         </div>
 
                         <div>
-                            <a href="index.php" class="btn btn-secondary me-2">
+                            <a href="<?= BASE_URL ?>/reserva/index" class="btn btn-secondary me-2">
                                 <i class="feather icon-arrow-left"></i>
                                 Volver
                             </a>
-                            <a href="create.php" class="btn btn-primary">Nueva Reserva</a>
+                            <a href="<?= BASE_URL ?>/reserva/create" class="btn btn-primary">Nueva Reserva</a>
                         </div>
                     </div>
 
                     <div class="card-body">
                         <div class="row">
 
-                            <div class="col-md-6 col-xl-4">
-                                <div class="card border">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                            <div>
-                                                <h6 class="mb-1">Sábado 18 de julio</h6>
-                                                <span class="badge bg-success">Confirmada</span>
+                            <?php if (!empty($data['reservas'])): ?>
+                                <?php foreach ($data['reservas'] as $reserva): ?>
+                                    <?php
+                                        $fecha = strtotime($reserva['fecha']);
+                                        $textoFecha = $dias[(int)date('w', $fecha)] . ' ' .
+                                                      date('d', $fecha) . ' de ' .
+                                                      $meses[(int)date('n', $fecha)];
+                                    ?>
+
+                                    <div class="col-md-6 col-xl-4 mb-3">
+                                        <div class="card border h-100 mb-0">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                                    <div>
+                                                        <h6 class="mb-1"><?= htmlspecialchars($textoFecha) ?></h6>
+                                                        <span class="badge bg-success">Reservado</span>
+                                                    </div>
+                                                    <i class="ph ph-calendar-check f-28 text-primary"></i>
+                                                </div>
+
+                                                <h5><?= htmlspecialchars($reserva['area_nombre']) ?></h5>
+                                                <p class="mb-1">
+                                                    <strong>Horario:</strong>
+                                                    <?= date('g:i A', strtotime($reserva['hora_inicio'])) ?> -
+                                                    <?= date('g:i A', strtotime($reserva['hora_fin'])) ?>
+                                                </p>
+                                                <p class="mb-1">
+                                                    <strong>Residente:</strong>
+                                                    <?= htmlspecialchars($reserva['residente_nombre']) ?>
+                                                </p>
+                                                <p class="mb-1">
+                                                    <strong>Vivienda:</strong>
+                                                    <?= htmlspecialchars($reserva['vivienda_identificador']) ?>
+                                                </p>
+                                                <p class="mb-0">
+                                                    <strong>Personas:</strong>
+                                                    <?= htmlspecialchars($reserva['personas']) ?>
+                                                </p>
                                             </div>
-                                            <i class="ph ph-calendar-check f-28 text-primary"></i>
                                         </div>
-                                        <h5>Rancho BBQ</h5>
-                                        <p class="mb-1"><strong>Horario:</strong> 2:00 PM - 6:00 PM</p>
-                                        <p class="mb-1"><strong>Residente:</strong> María Rodríguez</p>
-                                        <p class="mb-0"><strong>Personas:</strong> 20</p>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <div class="col-12">
+                                    <div class="alert alert-info text-center">
+                                        No hay próximas reservas registradas.
                                     </div>
                                 </div>
-                            </div>
+                            <?php endif; ?>
 
-                            <div class="col-md-6 col-xl-4">
-                                <div class="card border">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                            <div>
-                                                <h6 class="mb-1">Lunes 20 de julio</h6>
-                                                <span class="badge bg-warning">Pendiente</span>
-                                            </div>
-                                            <i class="ph ph-calendar-blank f-28 text-primary"></i>
-                                        </div>
-                                        <h5>Salón Comunal</h5>
-                                        <p class="mb-1"><strong>Horario:</strong> 4:00 PM - 8:00 PM</p>
-                                        <p class="mb-1"><strong>Residente:</strong> Juan Pérez</p>
-                                        <p class="mb-0"><strong>Personas:</strong> 35</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 col-xl-4">
-                                <div class="card border">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                            <div>
-                                                <h6 class="mb-1">Jueves 23 de julio</h6>
-                                                <span class="badge bg-success">Confirmada</span>
-                                            </div>
-                                            <i class="ph ph-calendar-check f-28 text-primary"></i>
-                                        </div>
-                                        <h5>Cancha Multiuso</h5>
-                                        <p class="mb-1"><strong>Horario:</strong> 9:00 AM - 11:00 AM</p>
-                                        <p class="mb-1"><strong>Residente:</strong> Carlos Mora</p>
-                                        <p class="mb-0"><strong>Personas:</strong> 10</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 col-xl-4">
-                                <div class="card border">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                            <div>
-                                                <h6 class="mb-1">Sábado 25 de julio</h6>
-                                                <span class="badge bg-success">Confirmada</span>
-                                            </div>
-                                            <i class="ph ph-calendar-check f-28 text-primary"></i>
-                                        </div>
-                                        <h5>Piscina</h5>
-                                        <p class="mb-1"><strong>Horario:</strong> 10:00 AM - 1:00 PM</p>
-                                        <p class="mb-1"><strong>Residente:</strong> Ana López</p>
-                                        <p class="mb-0"><strong>Personas:</strong> 8</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 col-xl-4">
-                                <div class="card border">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                            <div>
-                                                <h6 class="mb-1">Domingo 26 de julio</h6>
-                                                <span class="badge bg-warning">Pendiente</span>
-                                            </div>
-                                            <i class="ph ph-calendar-blank f-28 text-primary"></i>
-                                        </div>
-                                        <h5>Rancho BBQ</h5>
-                                        <p class="mb-1"><strong>Horario:</strong> 12:00 PM - 4:00 PM</p>
-                                        <p class="mb-1"><strong>Residente:</strong> Diego Sánchez</p>
-                                        <p class="mb-0"><strong>Personas:</strong> 15</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 col-xl-4">
-                                <div class="card border border-dashed">
+                            <div class="col-md-6 col-xl-4 mb-3">
+                                <div class="card border border-dashed h-100 mb-0">
                                     <div class="card-body text-center d-flex flex-column justify-content-center" style="min-height: 210px;">
                                         <i class="ph ph-plus-circle f-36 text-primary mb-2"></i>
                                         <h6>¿Necesita reservar un espacio?</h6>
                                         <p class="text-muted">Registre una nueva reservación.</p>
-                                        <a href="create.php" class="btn btn-primary">Nueva Reserva</a>
+                                        <a href="<?= BASE_URL ?>/reserva/create" class="btn btn-primary">Nueva Reserva</a>
                                     </div>
                                 </div>
                             </div>

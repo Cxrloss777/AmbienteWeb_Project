@@ -1,74 +1,61 @@
-const botonReservar = document.querySelector("#boton-reservar");
-const mensajeReserva = document.querySelector("#mensaje-reserva");
+const formularioReserva = document.querySelector("#formulario-reserva");
 const fechaReserva = document.querySelector("#fecha");
+const areaReserva = document.querySelector("#area_id");
+const personasReserva = document.querySelector("#personas");
+const horaInicio = document.querySelector("#hora_inicio");
+const horaFin = document.querySelector("#hora_fin");
+const mensajeReserva = document.querySelector("#mensaje-reserva");
+const capacidadArea = document.querySelector("#capacidad-area");
 
-const hoy = new Date();
-let mesActual = hoy.getMonth() + 1;
-let diaActual = hoy.getDate();
-
-if (mesActual < 10) {
-    mesActual = "0" + mesActual;
+if (fechaReserva) {
+    const hoy = new Date();
+    const anio = hoy.getFullYear();
+    const mes = String(hoy.getMonth() + 1).padStart(2, "0");
+    const dia = String(hoy.getDate()).padStart(2, "0");
+    fechaReserva.min = `${anio}-${mes}-${dia}`;
 }
 
-if (diaActual < 10) {
-    diaActual = "0" + diaActual;
-}
+function actualizarCapacidad() {
+    if (!areaReserva || !capacidadArea) {
+        return;
+    }
 
-const fechaActual = hoy.getFullYear() + "-" + mesActual + "-" + diaActual;
-fechaReserva.min = fechaActual;
+    const opcion = areaReserva.options[areaReserva.selectedIndex];
+    const capacidad = opcion ? opcion.dataset.capacidad : "";
 
-botonReservar.addEventListener("click", validarReserva);
-
-function validarReserva() {
-    const nombre = document.querySelector("#nombre").value.trim();
-    const contacto = document.querySelector("#contacto").value.trim();
-    const vivienda = document.querySelector("#vivienda-reserva").value.trim();
-    const area = document.querySelector("#area").value;
-    const fecha = fechaReserva.value;
-    const personas = document.querySelector("#personas").value;
-    const horaInicio = document.querySelector("#hora-inicio").value;
-    const horaFin = document.querySelector("#hora-fin").value;
-
-    if (
-        nombre === "" ||
-        contacto === "" ||
-        vivienda === "" ||
-        area === "" ||
-        fecha === "" ||
-        personas === "" ||
-        horaInicio === "" ||
-        horaFin === ""
-    ) {
-        mostrarMensajeReserva("Debe llenar todos los espacios obligatorios.", "danger");
-    } else if (
-        contacto.includes("@") === false ||
-        contacto.includes(".") === false ||
-        contacto.includes(" ") === true
-    ) {
-        mostrarMensajeReserva("Debe ingresar un correo electrónico válido.", "danger");
-    } else if (personas <= 0) {
-        mostrarMensajeReserva("El número de personas debe ser mayor que cero.", "danger");
-    } else if (fecha < fechaActual) {
-        mostrarMensajeReserva("La fecha no puede ser anterior a la fecha actual.", "danger");
-    } else if (horaFin <= horaInicio) {
-        mostrarMensajeReserva("La hora de finalización debe ser posterior a la hora de inicio.", "danger");
+    if (capacidad) {
+        capacidadArea.textContent = `Capacidad máxima: ${capacidad} personas.`;
+        personasReserva.max = capacidad;
     } else {
-        const partesFecha = fecha.split("-");
-        const fechaFormato = partesFecha[2] + "/" + partesFecha[1] + "/" + partesFecha[0];
-
-        mensajeReserva.innerHTML =
-            "Reservación realizada correctamente.<br>" +
-            "Área: " + area + "<br>" +
-            "Fecha: " + fechaFormato + "<br>" +
-            "Horario: " + horaInicio + " - " + horaFin;
-
-        mensajeReserva.className = "alert alert-success";
-        botonReservar.disabled = true;
-        botonReservar.textContent = "Reserva Completada";
+        capacidadArea.textContent = "";
+        personasReserva.removeAttribute("max");
     }
 }
 
-function mostrarMensajeReserva(texto, tipo) {
-    mensajeReserva.textContent = texto;
-    mensajeReserva.className = "alert alert-" + tipo;
+if (areaReserva) {
+    areaReserva.addEventListener("change", actualizarCapacidad);
+    actualizarCapacidad();
+}
+
+if (formularioReserva) {
+    formularioReserva.addEventListener("submit", function (event) {
+        mensajeReserva.classList.add("d-none");
+
+        if (horaFin.value <= horaInicio.value) {
+            event.preventDefault();
+            mensajeReserva.textContent = "La hora de finalización debe ser posterior a la hora de inicio.";
+            mensajeReserva.classList.remove("d-none");
+            return;
+        }
+
+        const opcion = areaReserva.options[areaReserva.selectedIndex];
+        const capacidad = opcion ? parseInt(opcion.dataset.capacidad || "0") : 0;
+        const personas = parseInt(personasReserva.value || "0");
+
+        if (capacidad > 0 && personas > capacidad) {
+            event.preventDefault();
+            mensajeReserva.textContent = `El área seleccionada permite un máximo de ${capacidad} personas.`;
+            mensajeReserva.classList.remove("d-none");
+        }
+    });
 }

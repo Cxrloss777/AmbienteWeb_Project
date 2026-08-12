@@ -1,8 +1,15 @@
 <?php
 $pageTitle = "Recibos de Pago";
-    include '../app/views/layouts/header.php';
-    include '../app/views/layouts/sidebar.php';
-    include '../app/views/layouts/topbar.php';
+
+include '../app/views/layouts/header.php';
+include '../app/views/layouts/sidebar.php';
+include '../app/views/layouts/topbar.php';
+
+$meses = [
+    1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril',
+    5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto',
+    9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre'
+];
 ?>
 
 <div class="pc-container">
@@ -14,62 +21,70 @@ $pageTitle = "Recibos de Pago";
 
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Recibos de Pago</h5>
-                        <a href="index.php" class="btn btn-secondary">
+
+                        <a href="<?= BASE_URL ?>/pago/index" class="btn btn-secondary">
                             <i class="feather icon-arrow-left"></i>
                             Volver
                         </a>
                     </div>
 
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-striped align-middle">
-                                <thead>
-                                    <tr>
-                                        <th>Recibo</th>
-                                        <th>Fecha</th>
-                                        <th>Concepto</th>
-                                        <th>Método</th>
-                                        <th>Monto</th>
-                                        <th>Estado</th>
-                                        <th>Acción</th>
-                                    </tr>
-                                </thead>
 
-                                <tbody>
-                                    <tr>
-                                        <td>REC-0003</td>
-                                        <td>30/06/2026</td>
-                                        <td>Cuota condominal - Junio</td>
-                                        <td>Tarjeta terminada en 4582</td>
-                                        <td>₡45 000</td>
-                                        <td><span class="badge bg-success">Completado</span></td>
-                                        <td><button type="button" class="btn btn-info btn-sm" onclick="window.print()">Imprimir</button></td>
-                                    </tr>
+                        <?php if (empty($pagos)): ?>
+                            <div class="alert alert-info mb-0">
+                                Todavía no hay pagos registrados.
+                            </div>
+                        <?php else: ?>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Recibo</th>
+                                            <th>Fecha</th>
+                                            <th>Residente</th>
+                                            <th>Vivienda</th>
+                                            <th>Concepto</th>
+                                            <th>Método</th>
+                                            <th>Monto</th>
+                                            <th>Estado</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                    </thead>
 
-                                    <tr>
-                                        <td>REC-0002</td>
-                                        <td>20/06/2026</td>
-                                        <td>Reserva del rancho</td>
-                                        <td>Tarjeta terminada en 1204</td>
-                                        <td>₡30 000</td>
-                                        <td><span class="badge bg-success">Completado</span></td>
-                                        <td><button type="button" class="btn btn-info btn-sm" onclick="window.print()">Imprimir</button></td>
-                                    </tr>
+                                    <tbody>
+                                        <?php foreach ($pagos as $pago): ?>
+                                            <?php
+                                            $periodoTimestamp = strtotime($pago['periodo']);
+                                            $periodoTexto =
+                                                $meses[(int)date('n', $periodoTimestamp)] .
+                                                ' ' .
+                                                date('Y', $periodoTimestamp);
+                                            ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($pago['numero_recibo']) ?></td>
+                                                <td><?= date('d/m/Y H:i', strtotime($pago['fecha_pago'])) ?></td>
+                                                <td><?= htmlspecialchars($pago['residente_nombre']) ?></td>
+                                                <td><?= htmlspecialchars($pago['vivienda_identificador']) ?></td>
+                                                <td>Cuota de mantenimiento - <?= htmlspecialchars($periodoTexto) ?></td>
+                                                <td><?= htmlspecialchars($pago['metodo_pago']) ?></td>
+                                                <td>₡<?= number_format((float)$pago['monto'], 0, ',', ' ') ?></td>
+                                                <td><span class="badge bg-success">Completado</span></td>
+                                                <td>
+                                                    <a
+                                                        href="<?= BASE_URL ?>/pago/recibo/<?= (int)$pago['id'] ?>"
+                                                        class="btn btn-info btn-sm"
+                                                    >
+                                                        Ver recibo
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php endif; ?>
 
-                                    <tr>
-                                        <td>REC-0001</td>
-                                        <td>31/05/2026</td>
-                                        <td>Cuota condominal - Mayo</td>
-                                        <td>Transferencia</td>
-                                        <td>₡45 000</td>
-                                        <td><span class="badge bg-success">Completado</span></td>
-                                        <td><button type="button" class="btn btn-info btn-sm" onclick="window.print()">Imprimir</button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
-
                 </div>
             </div>
         </div>
