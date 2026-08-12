@@ -96,6 +96,21 @@ class Reserva {
         return $stmt->execute();
     }
 
+    public function countThisMonth() {
+        $query = "SELECT COUNT(*) AS total FROM reservas
+                  WHERE estado = 'Confirmada'
+                    AND YEAR(fecha) = YEAR(CURDATE())
+                    AND MONTH(fecha) = MONTH(CURDATE())";
+        $result = $this->db->query($query);
+        return (int) $result->fetch_assoc()['total'];
+    }
+
+    public function countAreas() {
+        $query = "SELECT COUNT(*) AS total FROM areas_comunes";
+        $result = $this->db->query($query);
+        return (int) $result->fetch_assoc()['total'];
+    }
+
     public function cancel($id) {
         $query = "UPDATE reservas SET estado = 'Cancelada' WHERE id = ?";
         $stmt = $this->db->prepare($query);

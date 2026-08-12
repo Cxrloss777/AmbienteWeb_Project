@@ -262,14 +262,14 @@ VALUES
 
 -- Visitantes
 INSERT INTO visitantes
-(nombre, cedula, visitado, apartamento, fecha, hora, placa,
+(nombre, cedula, visitado, vivienda_id, fecha, hora, placa,
  cantidad, motivo, observaciones)
 VALUES
 (
     'Andrea Jiménez',
     '3-3333-3333',
     'María Rodríguez',
-    'A-101',
+    (SELECT id FROM viviendas WHERE identificador = 'A-101' LIMIT 1),
     '2026-08-15',
     '14:00:00',
     'ABC123',
@@ -281,7 +281,7 @@ VALUES
     'Daniel Mora',
     '4-4444-4444',
     'Carlos Vargas',
-    'B-202',
+    (SELECT id FROM viviendas WHERE identificador = 'B-202' LIMIT 1),
     '2026-08-16',
     '10:30:00',
     'XYZ789',

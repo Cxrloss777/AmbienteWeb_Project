@@ -71,4 +71,11 @@ class Vivienda {
         $stmt->bind_param("i", $id);
         return $stmt->execute();
     }
+
+    public function updateEstado($id, $estado) {
+        $query = "UPDATE viviendas SET estado = ? WHERE id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("si", $estado, $id);
+        return $stmt->execute();
+    }
 }

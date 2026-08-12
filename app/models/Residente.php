@@ -81,4 +81,13 @@ class Residente {
         $stmt->bind_param("i", $id);
         return $stmt->execute();
     }
+
+    public function countByVivienda($viviendaId) {
+        $query = "SELECT COUNT(*) as total FROM residentes WHERE vivienda_id = ? AND estado = 'Activo'";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("i", $viviendaId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return (int) $result->fetch_assoc()['total'];
+    }
 }

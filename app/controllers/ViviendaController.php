@@ -95,7 +95,12 @@ class ViviendaController extends Controller {
 
     public function delete($id = null) {
         if ($id) {
-            $this->viviendaModel->delete($id);
+            try {
+                $this->viviendaModel->delete($id);
+                $_SESSION['flash_success'] = 'Vivienda eliminada correctamente';
+            } catch (mysqli_sql_exception $e) {
+                $_SESSION['flash_error'] = 'No se puede eliminar esta vivienda porque tiene residentes asignados. Reasigna o elimina primero a los residentes.';
+            }
         }
         $this->redirect('/vivienda/index');
     }

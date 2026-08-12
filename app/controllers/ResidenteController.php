@@ -14,6 +14,18 @@ class ResidenteController extends Controller {
         $this->viviendaModel = $this->model('Vivienda');
     }
 
+    private function sincronizarEstadoVivienda($viviendaId) {
+        $vivienda = $this->viviendaModel->getById($viviendaId);
+        if (!$vivienda) {
+            return;
+        }
+        $totalResidentes = $this->residenteModel->countByVivienda($viviendaId);
+        $nuevoEstado = $totalResidentes > 0 ? 'Ocupada' : 'Disponible';
+        if ($vivienda['estado'] !== $nuevoEstado) {
+            $this->viviendaModel->updateEstado($viviendaId, $nuevoEstado);
+        }
+    }
+
     public function index() {
         $residentes = $this->residenteModel->getAll();
         $this->view('residentes/index', ['residentes' => $residentes]);
@@ -34,8 +46,32 @@ class ResidenteController extends Controller {
             ];
 
             if (!empty($data['nombre']) && !empty($data['cedula']) && !empty($data['vivienda_id'])) {
+                $vivienda = $this->viviendaModel->getById($data['vivienda_id']);
+                $totalResidentes = $vivienda ? $this->residenteModel->countByVivienda($data['vivienda_id']) : 0;
+
+                if (!$vivienda) {
+                    $viviendas = $this->viviendaModel->getAll();
+                    $this->view('residentes/create', [
+                        'viviendas' => $viviendas,
+                        'error' => 'La vivienda seleccionada no existe',
+                        'residente' => $data
+                    ]);
+                    return;
+                }
+
+                if ($totalResidentes >= (int) $vivienda['num_habitantes']) {
+                    $viviendas = $this->viviendaModel->getAll();
+                    $this->view('residentes/create', [
+                        'viviendas' => $viviendas,
+                        'error' => 'Esta vivienda ya alcanzó su capacidad máxima de habitantes (' . $vivienda['num_habitantes'] . ')',
+                        'residente' => $data
+                    ]);
+                    return;
+                }
+
                 try {
                     $this->residenteModel->create($data);
+                    $this->sincronizarEstadoVivienda($data['vivienda_id']);
                     $_SESSION['flash_success'] = 'Residente registrado correctamente';
                     $this->redirect('/residente/index');
                 } catch (mysqli_sql_exception $e) {
@@ -79,6 +115,8 @@ class ResidenteController extends Controller {
         }
 
         $viviendas = $this->viviendaModel->getAll();
+        $residenteActual = $this->residenteModel->getById($id);
+        $viviendaAnteriorId = $residenteActual['vivienda_id'] ?? null;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = [
@@ -93,9 +131,42 @@ class ResidenteController extends Controller {
                 'observaciones' => $_POST['observaciones'] ?? ''
             ];
 
+            $cambioVivienda = $viviendaAnteriorId && $data['vivienda_id'] != $viviendaAnteriorId;
+
             if (!empty($data['nombre']) && !empty($data['cedula']) && !empty($data['vivienda_id'])) {
+                if ($cambioVivienda) {
+                    $viviendaNueva = $this->viviendaModel->getById($data['vivienda_id']);
+                    $totalResidentes = $viviendaNueva ? $this->residenteModel->countByVivienda($data['vivienda_id']) : 0;
+
+                    if (!$viviendaNueva) {
+                        $residente = $data;
+                        $residente['id'] = $id;
+                        $this->view('residentes/edit', [
+                            'residente' => $residente,
+                            'viviendas' => $viviendas,
+                            'error' => 'La vivienda seleccionada no existe'
+                        ]);
+                        return;
+                    }
+
+                    if ($totalResidentes >= (int) $viviendaNueva['num_habitantes']) {
+                        $residente = $data;
+                        $residente['id'] = $id;
+                        $this->view('residentes/edit', [
+                            'residente' => $residente,
+                            'viviendas' => $viviendas,
+                            'error' => 'Esta vivienda ya alcanzó su capacidad máxima de habitantes (' . $viviendaNueva['num_habitantes'] . ')'
+                        ]);
+                        return;
+                    }
+                }
+
                 try {
                     $this->residenteModel->update($id, $data);
+                    if ($cambioVivienda) {
+                        $this->sincronizarEstadoVivienda($viviendaAnteriorId);
+                    }
+                    $this->sincronizarEstadoVivienda($data['vivienda_id']);
                     $_SESSION['flash_success'] = 'Residente actualizado correctamente';
                     $this->redirect('/residente/show/' . $id);
                 } catch (mysqli_sql_exception $e) {
@@ -130,7 +201,11 @@ class ResidenteController extends Controller {
 
     public function delete($id = null) {
         if ($id) {
+            $residente = $this->residenteModel->getById($id);
             $this->residenteModel->delete($id);
+            if ($residente) {
+                $this->sincronizarEstadoVivienda($residente['vivienda_id']);
+            }
             $_SESSION['flash_success'] = 'Residente eliminado correctamente';
         }
         $this->redirect('/residente/index');

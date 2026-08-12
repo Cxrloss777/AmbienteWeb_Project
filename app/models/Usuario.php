@@ -48,4 +48,18 @@ class Usuario {
         $stmt->bind_param("ss", $hashNuevo, $token);
         return $stmt->execute();
     }
+    
+    public function actualizarPerfil($id, $nombre, $correo) {
+    $query = "UPDATE usuarios SET nombre = ?, correo = ? WHERE id = ?";
+    $stmt = $this->db->prepare($query);
+    $stmt->bind_param("ssi", $nombre, $correo, $id);
+    return $stmt->execute();
+}
+
+public function actualizarContrasena($id, $hashNuevo) {
+    $query = "UPDATE usuarios SET contrasena = ? WHERE id = ?";
+    $stmt = $this->db->prepare($query);
+    $stmt->bind_param("si", $hashNuevo, $id);
+    return $stmt->execute();
+}
 }

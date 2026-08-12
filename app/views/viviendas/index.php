@@ -33,6 +33,16 @@ $badgeClass = [
 
                     <div class="card-body">
 
+                        <?php if (isset($_SESSION['flash_success'])): ?>
+                            <div class="alert alert-success"><?= htmlspecialchars($_SESSION['flash_success']) ?></div>
+                            <?php unset($_SESSION['flash_success']); ?>
+                        <?php endif; ?>
+
+                        <?php if (isset($_SESSION['flash_error'])): ?>
+                            <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['flash_error']) ?></div>
+                            <?php unset($_SESSION['flash_error']); ?>
+                        <?php endif; ?>
+
                         <div class="row mb-4">
 
                             <div class="col-md-4">

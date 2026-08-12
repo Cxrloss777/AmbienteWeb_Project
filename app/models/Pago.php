@@ -237,6 +237,63 @@ class Pago {
         ];
     }
 
+    public function getResumenDashboard() {
+        $data = [];
+
+        $data['pagos_hoy'] = $this->db->query(
+            "SELECT COALESCE(SUM(monto), 0) AS total FROM pagos
+             WHERE estado = 'Completado' AND DATE(fecha_pago) = CURDATE()"
+        )->fetch_assoc()['total'];
+
+        $data['pagos_mes'] = $this->db->query(
+            "SELECT COALESCE(SUM(monto), 0) AS total FROM pagos
+             WHERE estado = 'Completado' AND YEAR(fecha_pago) = YEAR(CURDATE()) AND MONTH(fecha_pago) = MONTH(CURDATE())"
+        )->fetch_assoc()['total'];
+
+        $data['pagos_anio'] = $this->db->query(
+            "SELECT COALESCE(SUM(monto), 0) AS total FROM pagos
+             WHERE estado = 'Completado' AND YEAR(fecha_pago) = YEAR(CURDATE())"
+        )->fetch_assoc()['total'];
+
+        $data['cuotas_pagadas_mes'] = $this->db->query(
+            "SELECT COUNT(*) AS total FROM cuotas
+             WHERE estado = 'Pagada' AND YEAR(periodo) = YEAR(CURDATE()) AND MONTH(periodo) = MONTH(CURDATE())"
+        )->fetch_assoc()['total'];
+
+        $pendienteMes = $this->db->query(
+            "SELECT COUNT(*) AS total, COALESCE(SUM(monto), 0) AS monto FROM cuotas
+             WHERE estado = 'Pendiente' AND YEAR(periodo) = YEAR(CURDATE()) AND MONTH(periodo) = MONTH(CURDATE())"
+        )->fetch_assoc();
+        $data['cuotas_pendientes_mes'] = $pendienteMes['total'];
+        $data['monto_pendiente_mes'] = $pendienteMes['monto'];
+
+        $data['cuotas_al_dia'] = $this->db->query(
+            "SELECT COUNT(DISTINCT residentes.id) AS total FROM residentes
+             WHERE residentes.estado = 'Activo' AND residentes.id NOT IN (
+                 SELECT residente_id FROM cuotas WHERE estado = 'Pendiente' AND fecha_vencimiento < CURDATE()
+             )"
+        )->fetch_assoc()['total'];
+
+        $data['cuotas_vencidas'] = $this->db->query(
+            "SELECT COUNT(*) AS total FROM cuotas WHERE estado = 'Pendiente' AND fecha_vencimiento < CURDATE()"
+        )->fetch_assoc()['total'];
+
+        $pagosRecientes = $this->db->query(
+            "SELECT pagos.numero_recibo, pagos.fecha_pago, pagos.estado,
+                    residentes.nombre AS residente_nombre,
+                    viviendas.identificador AS vivienda_identificador
+             FROM pagos
+             JOIN cuotas ON pagos.cuota_id = cuotas.id
+             JOIN residentes ON cuotas.residente_id = residentes.id
+             JOIN viviendas ON residentes.vivienda_id = viviendas.id
+             ORDER BY pagos.fecha_pago DESC
+             LIMIT 5"
+        );
+        $data['pagos_recientes'] = $pagosRecientes->fetch_all(MYSQLI_ASSOC);
+
+        return $data;
+    }
+
     public function getMorososPorPeriodo($periodo) {
         $query = "SELECT cuotas.*,
                          residentes.nombre AS residente_nombre,

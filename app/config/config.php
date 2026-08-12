@@ -2,7 +2,7 @@
 // Configuración de la base de datos
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
-define('DB_PASS', '5723');
+define('DB_PASS', 'Luis7711');
 define('DB_NAME', 'residencianet');
 
 // Configuración de la URL base
