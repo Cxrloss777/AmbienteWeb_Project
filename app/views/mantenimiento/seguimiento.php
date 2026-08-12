@@ -1,8 +1,10 @@
 <?php
 $pageTitle = "Seguimiento de Mantenimiento";
-    include '../app/views/layouts/header.php';
-    include '../app/views/layouts/sidebar.php';
-    include '../app/views/layouts/topbar.php';
+include '../app/views/layouts/header.php';
+include '../app/views/layouts/sidebar.php';
+include '../app/views/layouts/topbar.php';
+
+$mantenimiento = $data['mantenimiento'];
 ?>
 
 <div class="pc-container">
@@ -10,7 +12,7 @@ $pageTitle = "Seguimiento de Mantenimiento";
 
         <div class="row">
 
-            <div class="col-lg-10 mx-auto">
+            <div class="col-lg-8 mx-auto">
 
                 <div class="card">
 
@@ -18,8 +20,7 @@ $pageTitle = "Seguimiento de Mantenimiento";
 
                         <h5 class="mb-0">Seguimiento de Solicitud</h5>
 
-                        <a href="index.php" class="btn btn-secondary">
-                            <i class="feather icon-arrow-left"></i>
+                        <a href="<?= BASE_URL ?>/mantenimiento/index" class="btn btn-secondary">
                             Volver
                         </a>
 
@@ -27,102 +28,87 @@ $pageTitle = "Seguimiento de Mantenimiento";
 
                     <div class="card-body">
 
-                        <div class="row mb-4">
+                        <div class="row">
 
-                            <div class="col-md-6">
-                                <strong>Residente</strong>
-                                <p>Juan Pérez</p>
+                            <div class="col-md-6 mb-3">
+                                <strong>Residente:</strong>
+                                <p><?= htmlspecialchars($mantenimiento['residente']) ?></p>
                             </div>
 
-                            <div class="col-md-6">
-                                <strong>Categoría</strong>
-                                <p>Electricidad</p>
+                            <div class="col-md-6 mb-3">
+                                <strong>Categoría:</strong>
+                                <p><?= htmlspecialchars($mantenimiento['categoria']) ?></p>
                             </div>
 
-                            <div class="col-md-6">
-                                <strong>Fecha del Reporte</strong>
-                                <p>14/07/2026</p>
+                            <div class="col-md-6 mb-3">
+                                <strong>Prioridad:</strong>
+                                <p><?= htmlspecialchars($mantenimiento['prioridad']) ?></p>
                             </div>
 
-                            <div class="col-md-6">
-                                <strong>Prioridad</strong><br>
-                                <span class="badge bg-danger">
-                                    Alta
-                                </span>
+                            <div class="col-md-6 mb-3">
+                                <strong>Fecha:</strong>
+                                <p><?= htmlspecialchars($mantenimiento['fecha']) ?></p>
                             </div>
 
-                        </div>
-
-                        <div class="mb-4">
-
-                            <strong>Descripción del Problema</strong>
-
-                            <div class="border rounded p-3 mt-2">
-                                Se reporta una falla en la iluminación del parqueo principal.
-                                Varias lámparas permanecen apagadas durante la noche.
+                            <div class="col-12 mb-3">
+                                <strong>Ubicación:</strong>
+                                <p><?= htmlspecialchars($mantenimiento['ubicacion']) ?></p>
                             </div>
 
-                        </div>
-
-                        <div class="mb-4">
-
-                            <strong>Estado Actual</strong><br><br>
-
-                            <span class="badge bg-warning fs-6">
-                                En Proceso
-                            </span>
+                            <div class="col-12 mb-3">
+                                <strong>Descripción:</strong>
+                                <p>
+                                    <?= nl2br(htmlspecialchars($mantenimiento['descripcion'])) ?>
+                                </p>
+                            </div>
 
                         </div>
 
                         <hr>
 
-                        <h5 class="mb-3">Historial de Seguimiento</h5>
+                        <form
+                            action="<?= BASE_URL ?>/mantenimiento/seguimiento/<?= $mantenimiento['id'] ?>"
+                            method="POST">
 
-                        <div class="table-responsive">
+                            <div class="mb-3">
 
-                            <table class="table table-bordered table-hover">
+                                <label class="form-label">
+                                    Estado
+                                </label>
 
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th>
-                                        <th>Responsable</th>
-                                        <th>Actualización</th>
-                                    </tr>
-                                </thead>
+                                <select class="form-select" name="estado">
 
-                                <tbody>
+                                    <option
+                                        value="Pendiente"
+                                        <?= $mantenimiento['estado'] == 'Pendiente' ? 'selected' : '' ?>>
+                                        Pendiente
+                                    </option>
 
-                                    <tr>
-                                        <td>14/07/2026</td>
-                                        <td>Administrador</td>
-                                        <td>Solicitud registrada.</td>
-                                    </tr>
+                                    <option
+                                        value="En proceso"
+                                        <?= $mantenimiento['estado'] == 'En proceso' ? 'selected' : '' ?>>
+                                        En proceso
+                                    </option>
 
-                                    <tr>
-                                        <td>15/07/2026</td>
-                                        <td>Departamento de Mantenimiento</td>
-                                        <td>Solicitud asignada al técnico.</td>
-                                    </tr>
+                                    <option
+                                        value="Resuelto"
+                                        <?= $mantenimiento['estado'] == 'Resuelto' ? 'selected' : '' ?>>
+                                        Resuelto
+                                    </option>
 
-                                    <tr>
-                                        <td>16/07/2026</td>
-                                        <td>Técnico</td>
-                                        <td>Se inició la reparación del sistema eléctrico.</td>
-                                    </tr>
+                                </select>
 
-                                </tbody>
+                            </div>
 
-                            </table>
+                            <div class="text-end">
 
-                        </div>
+                                <button type="submit" class="btn btn-primary">
+                                    Actualizar Estado
+                                </button>
 
-                    </div>
+                            </div>
 
-                    <div class="card-footer text-end">
-
-                        <a href="index.php" class="btn btn-primary">
-                            Regresar a Solicitudes
-                        </a>
+                        </form>
 
                     </div>
 

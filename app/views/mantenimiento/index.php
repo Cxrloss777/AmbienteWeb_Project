@@ -1,8 +1,8 @@
 <?php
 $pageTitle = "Mantenimiento";
-    include '../app/views/layouts/header.php';
-    include '../app/views/layouts/sidebar.php';
-    include '../app/views/layouts/topbar.php';
+include '../app/views/layouts/header.php';
+include '../app/views/layouts/sidebar.php';
+include '../app/views/layouts/topbar.php';
 ?>
 
 <div class="pc-container">
@@ -12,13 +12,20 @@ $pageTitle = "Mantenimiento";
 
             <div class="col-12">
 
+                <?php if (isset($_SESSION['flash_success'])): ?>
+                    <div class="alert alert-success">
+                        <?= htmlspecialchars($_SESSION['flash_success']) ?>
+                    </div>
+                    <?php unset($_SESSION['flash_success']); ?>
+                <?php endif; ?>
+
                 <div class="card">
 
                     <div class="card-header d-flex justify-content-between align-items-center">
 
                         <h5 class="mb-0">Solicitudes de Mantenimiento</h5>
 
-                        <a href="create.php" class="btn btn-primary">
+                        <a href="<?= BASE_URL ?>/mantenimiento/create" class="btn btn-primary">
                             <i class="feather icon-plus"></i>
                             Nueva Solicitud
                         </a>
@@ -36,68 +43,91 @@ $pageTitle = "Mantenimiento";
                                         <th>#</th>
                                         <th>Residente</th>
                                         <th>Categoría</th>
+                                        <th>Prioridad</th>
                                         <th>Descripción</th>
                                         <th>Fecha</th>
                                         <th>Estado</th>
-                                        <th>Seguimiento</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
 
+                                <?php if (!empty($data['mantenimientos'])): ?>
+
+                                    <?php foreach ($data['mantenimientos'] as $mantenimiento): ?>
+
+                                        <tr>
+
+                                            <td><?= htmlspecialchars($mantenimiento['id']) ?></td>
+
+                                            <td>
+                                                <?= htmlspecialchars($mantenimiento['residente']) ?>
+                                            </td>
+
+                                            <td>
+                                                <?= htmlspecialchars($mantenimiento['categoria']) ?>
+                                            </td>
+
+                                            <td>
+                                                <?= htmlspecialchars($mantenimiento['prioridad']) ?>
+                                            </td>
+
+                                            <td>
+                                                <?= htmlspecialchars($mantenimiento['descripcion']) ?>
+                                            </td>
+
+                                            <td>
+                                                <?= htmlspecialchars($mantenimiento['fecha']) ?>
+                                            </td>
+
+                                            <td>
+
+                                                <?php if ($mantenimiento['estado'] == 'Pendiente'): ?>
+
+                                                    <span class="badge bg-danger">
+                                                        Pendiente
+                                                    </span>
+
+                                                <?php elseif ($mantenimiento['estado'] == 'En proceso'): ?>
+
+                                                    <span class="badge bg-warning">
+                                                        En proceso
+                                                    </span>
+
+                                                <?php else: ?>
+
+                                                    <span class="badge bg-success">
+                                                        Resuelto
+                                                    </span>
+
+                                                <?php endif; ?>
+
+                                            </td>
+
+                                            <td>
+
+                                                <a
+                                                    href="<?= BASE_URL ?>/mantenimiento/seguimiento/<?= $mantenimiento['id'] ?>"
+                                                    class="btn btn-info btn-sm">
+                                                    Seguimiento
+                                                </a>
+
+                                            </td>
+
+                                        </tr>
+
+                                    <?php endforeach; ?>
+
+                                <?php else: ?>
+
                                     <tr>
-                                        <td>1</td>
-                                        <td>Juan Pérez</td>
-                                        <td>Electricidad</td>
-                                        <td>Falla en iluminación del parqueo.</td>
-                                        <td>14/07/2026</td>
-                                        <td>
-                                            <span class="badge bg-warning">
-                                                En Proceso
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="seguimiento.php" class="btn btn-info btn-sm">
-                                                Ver
-                                            </a>
+                                        <td colspan="8" class="text-center">
+                                            No hay solicitudes de mantenimiento registradas.
                                         </td>
                                     </tr>
 
-                                    <tr>
-                                        <td>2</td>
-                                        <td>María Rodríguez</td>
-                                        <td>Plomería</td>
-                                        <td>Fuga de agua en área común.</td>
-                                        <td>13/07/2026</td>
-                                        <td>
-                                            <span class="badge bg-success">
-                                                Completado
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="seguimiento.php" class="btn btn-info btn-sm">
-                                                Ver
-                                            </a>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Carlos Mora</td>
-                                        <td>Jardinería</td>
-                                        <td>Poda de árboles.</td>
-                                        <td>12/07/2026</td>
-                                        <td>
-                                            <span class="badge bg-danger">
-                                                Pendiente
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="seguimiento.php" class="btn btn-info btn-sm">
-                                                Ver
-                                            </a>
-                                        </td>
-                                    </tr>
+                                <?php endif; ?>
 
                                 </tbody>
 

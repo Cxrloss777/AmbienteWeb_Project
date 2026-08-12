@@ -1,8 +1,10 @@
 <?php
-$pageTitle = "Ver Comunicado";
-    include '../app/views/layouts/header.php';
-    include '../app/views/layouts/sidebar.php';
-    include '../app/views/layouts/topbar.php';
+$pageTitle = "Detalle del Comunicado";
+include '../app/views/layouts/header.php';
+include '../app/views/layouts/sidebar.php';
+include '../app/views/layouts/topbar.php';
+
+$comunicado = $data['comunicado'];
 ?>
 
 <div class="pc-container">
@@ -10,7 +12,7 @@ $pageTitle = "Ver Comunicado";
 
         <div class="row">
 
-            <div class="col-lg-10 mx-auto">
+            <div class="col-lg-8 mx-auto">
 
                 <div class="card">
 
@@ -18,8 +20,7 @@ $pageTitle = "Ver Comunicado";
 
                         <h5 class="mb-0">Detalle del Comunicado</h5>
 
-                        <a href="index.php" class="btn btn-secondary">
-                            <i class="feather icon-arrow-left"></i>
+                        <a href="<?= BASE_URL ?>/comunicado/index" class="btn btn-secondary">
                             Volver
                         </a>
 
@@ -27,59 +28,50 @@ $pageTitle = "Ver Comunicado";
 
                     <div class="card-body">
 
-                        <div class="row mb-4">
+                        <div class="mb-3">
+                            <h4>
+                                <?= htmlspecialchars($comunicado['titulo']) ?>
+                            </h4>
+                        </div>
 
-                            <div class="col-md-8">
-                                <h3>Mantenimiento de Piscina</h3>
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <strong>Autor:</strong>
+                                <p>
+                                    <?= htmlspecialchars($comunicado['autor']) ?>
+                                </p>
                             </div>
 
-                            <div class="col-md-4 text-md-end">
-                                <span class="badge bg-warning">
-                                    Prioridad Media
-                                </span>
+                            <div class="col-md-6 mb-3">
+                                <strong>Fecha:</strong>
+                                <p>
+                                    <?= htmlspecialchars($comunicado['fecha']) ?>
+                                </p>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <strong>Prioridad:</strong>
+                                <p>
+                                    <?= htmlspecialchars($comunicado['prioridad']) ?>
+                                </p>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <strong>Estado:</strong>
+                                <p>
+                                    <?= htmlspecialchars($comunicado['estado']) ?>
+                                </p>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <strong>Contenido:</strong>
+                                <p>
+                                    <?= nl2br(htmlspecialchars($comunicado['contenido'])) ?>
+                                </p>
                             </div>
 
                         </div>
-
-                        <div class="row mb-3">
-
-                            <div class="col-md-4">
-                                <strong>Autor:</strong><br>
-                                Administrador
-                            </div>
-
-                            <div class="col-md-4">
-                                <strong>Fecha:</strong><br>
-                                14/07/2026
-                            </div>
-
-                            <div class="col-md-4">
-                                <strong>Estado:</strong><br>
-                                <span class="badge bg-success">
-                                    Publicado
-                                </span>
-                            </div>
-
-                        </div>
-
-                        <hr>
-
-                        <h6>Contenido del Comunicado</h6>
-
-                        <p class="mt-3">
-                            Se informa a todos los residentes que la piscina permanecerá
-                            cerrada el próximo sábado debido a trabajos de mantenimiento
-                            preventivo. Agradecemos su comprensión y les recomendamos
-                            utilizar las demás áreas comunes mientras concluyen las labores.
-                        </p>
-
-                    </div>
-
-                    <div class="card-footer text-end">
-
-                        <a href="index.php" class="btn btn-primary">
-                            Regresar a Comunicados
-                        </a>
 
                     </div>
 
@@ -93,6 +85,6 @@ $pageTitle = "Ver Comunicado";
 </div>
 
 <?php
-include '../layouts/footer.php';
-include '../layouts/scripts.php';
+include '../app/views/layouts/footer.php';
+include '../app/views/layouts/scripts.php';
 ?>

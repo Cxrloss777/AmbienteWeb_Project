@@ -16,20 +16,17 @@ include '../app/views/layouts/topbar.php';
 
                     <div class="card-header d-flex justify-content-between align-items-center">
 
-                        <h5 class="mb-0">Visitantes Actuales</h5>
+                        <h5 class="mb-0">Visitantes</h5>
 
                         <div>
-
-                            <a href="<?= BASE_URL ?>/visitante/historial" class="btn btn-info me-2">
-                                <i class="feather icon-clock"></i>
+                            <a href="<?= BASE_URL ?>/visitante/historial" class="btn btn-info">
                                 Historial
                             </a>
 
                             <a href="<?= BASE_URL ?>/visitante/create" class="btn btn-primary">
                                 <i class="feather icon-plus"></i>
-                                Registrar Visitante
+                                Nuevo Visitante
                             </a>
-
                         </div>
 
                     </div>
@@ -43,11 +40,12 @@ include '../app/views/layouts/topbar.php';
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Nombre</th>
+                                        <th>Nombre Completo</th>
                                         <th>Cédula</th>
                                         <th>Persona Visitada</th>
+                                        <th>Apartamento</th>
                                         <th>Fecha</th>
-                                        <th>Hora Entrada</th>
+                                        <th>Hora</th>
                                         <th>Estado</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -56,26 +54,65 @@ include '../app/views/layouts/topbar.php';
                                 <tbody>
 
                                 <?php if (!empty($data['visitantes'])): ?>
-                                    <?php foreach ($data['visitantes'] as $v): ?>
+                                    <?php foreach ($data['visitantes'] as $visitante): ?>
+
                                     <tr>
-                                        <td><?= htmlspecialchars($v['id']) ?></td>
-                                        <td><?= htmlspecialchars($v['nombre']) ?></td>
-                                        <td><?= htmlspecialchars($v['cedula']) ?></td>
-                                        <td><?= htmlspecialchars($v['apartamento']) ?></td>
-                                        <td><?= date('d/m/Y', strtotime($v['fecha'])) ?></td>
-                                        <td><?= date('h:i A', strtotime($v['hora'])) ?></td>
-                                        <td><span class="badge bg-success">Dentro</span></td>
+
+                                        <td><?= htmlspecialchars($visitante['id']) ?></td>
+
                                         <td>
-                                            <a href="<?= BASE_URL ?>/visitante/salida/<?= $v['id'] ?>" class="btn btn-warning btn-sm" onclick="return confirm('¿Registrar la salida de este visitante?');">
+                                            <?= htmlspecialchars($visitante['nombre']) ?>
+                                        </td>
+
+                                        <td>
+                                            <?= htmlspecialchars($visitante['cedula']) ?>
+                                        </td>
+
+                                        <td>
+                                            <?= htmlspecialchars($visitante['visitado']) ?>
+                                        </td>
+
+                                        <td>
+                                            <?= htmlspecialchars($visitante['apartamento']) ?>
+                                        </td>
+
+                                        <td>
+                                            <?= htmlspecialchars($visitante['fecha']) ?>
+                                        </td>
+
+                                        <td>
+                                            <?= htmlspecialchars($visitante['hora']) ?>
+                                        </td>
+
+                                        <td>
+                                            <span class="badge bg-success">
+                                                <?= htmlspecialchars($visitante['estado']) ?>
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <a
+                                                href="<?= BASE_URL ?>/visitante/salida/<?= $visitante['id'] ?>"
+                                                class="btn btn-warning btn-sm"
+                                                onclick="return confirm('¿Registrar la salida de este visitante?');">
+
                                                 Registrar salida
+
                                             </a>
                                         </td>
+
                                     </tr>
+
                                     <?php endforeach; ?>
+
                                 <?php else: ?>
+
                                     <tr>
-                                        <td colspan="8" class="text-center">No hay visitantes dentro del condominio en este momento.</td>
+                                        <td colspan="9" class="text-center">
+                                            Todavía no hay visitantes registrados.
+                                        </td>
                                     </tr>
+
                                 <?php endif; ?>
 
                                 </tbody>

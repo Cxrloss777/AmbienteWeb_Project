@@ -1,8 +1,8 @@
 <?php
 $pageTitle = "Comunicados";
-    include '../app/views/layouts/header.php';
-    include '../app/views/layouts/sidebar.php';
-    include '../app/views/layouts/topbar.php';
+include '../app/views/layouts/header.php';
+include '../app/views/layouts/sidebar.php';
+include '../app/views/layouts/topbar.php';
 ?>
 
 <div class="pc-container">
@@ -12,13 +12,20 @@ $pageTitle = "Comunicados";
 
             <div class="col-12">
 
+                <?php if (isset($_SESSION['flash_success'])): ?>
+                    <div class="alert alert-success">
+                        <?= htmlspecialchars($_SESSION['flash_success']) ?>
+                    </div>
+                    <?php unset($_SESSION['flash_success']); ?>
+                <?php endif; ?>
+
                 <div class="card">
 
                     <div class="card-header d-flex justify-content-between align-items-center">
 
                         <h5 class="mb-0">Comunicados</h5>
 
-                        <a href="create.php" class="btn btn-primary">
+                        <a href="<?= BASE_URL ?>/comunicado/create" class="btn btn-primary">
                             <i class="feather icon-plus"></i>
                             Nuevo Comunicado
                         </a>
@@ -38,62 +45,90 @@ $pageTitle = "Comunicados";
                                         <th>Autor</th>
                                         <th>Fecha</th>
                                         <th>Prioridad</th>
-                                        <th>Ver</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
 
+                                <?php if (!empty($data['comunicados'])): ?>
+
+                                    <?php foreach ($data['comunicados'] as $comunicado): ?>
+
                                     <tr>
-                                        <td>1</td>
-                                        <td>Mantenimiento de Piscina</td>
-                                        <td>Administrador</td>
-                                        <td>14/07/2026</td>
+
                                         <td>
-                                            <span class="badge bg-warning">
-                                                Media
-                                            </span>
+                                            <?= htmlspecialchars($comunicado['id']) ?>
                                         </td>
+
                                         <td>
-                                            <a href="show.php" class="btn btn-info btn-sm">
+                                            <?= htmlspecialchars($comunicado['titulo']) ?>
+                                        </td>
+
+                                        <td>
+                                            <?= htmlspecialchars($comunicado['autor']) ?>
+                                        </td>
+
+                                        <td>
+                                            <?= htmlspecialchars($comunicado['fecha']) ?>
+                                        </td>
+
+                                        <td>
+
+                                            <?php if ($comunicado['prioridad'] === 'Alta'): ?>
+
+                                                <span class="badge bg-danger">
+                                                    Alta
+                                                </span>
+
+                                            <?php elseif ($comunicado['prioridad'] === 'Media'): ?>
+
+                                                <span class="badge bg-warning">
+                                                    Media
+                                                </span>
+
+                                            <?php else: ?>
+
+                                                <span class="badge bg-success">
+                                                    Baja
+                                                </span>
+
+                                            <?php endif; ?>
+
+                                        </td>
+
+                                        <td>
+
+                                            <span class="badge bg-<?= $comunicado['estado'] === 'Publicado' ? 'success' : 'secondary' ?>">
+                                                <?= htmlspecialchars($comunicado['estado']) ?>
+                                            </span>
+
+                                        </td>
+
+                                        <td>
+
+                                            <a
+                                                href="<?= BASE_URL ?>/comunicado/show/<?= $comunicado['id'] ?>"
+                                                class="btn btn-info btn-sm">
                                                 Ver
                                             </a>
+
+                                        </td>
+
+                                    </tr>
+
+                                    <?php endforeach; ?>
+
+                                <?php else: ?>
+
+                                    <tr>
+                                        <td colspan="7" class="text-center">
+                                            Todavía no hay comunicados registrados.
                                         </td>
                                     </tr>
 
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Corte Programado de Agua</td>
-                                        <td>Administrador</td>
-                                        <td>12/07/2026</td>
-                                        <td>
-                                            <span class="badge bg-danger">
-                                                Alta
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="show.php" class="btn btn-info btn-sm">
-                                                Ver
-                                            </a>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Reunión de Condóminos</td>
-                                        <td>Administración</td>
-                                        <td>10/07/2026</td>
-                                        <td>
-                                            <span class="badge bg-success">
-                                                Baja
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="show.php" class="btn btn-info btn-sm">
-                                                Ver
-                                            </a>
-                                        </td>
-                                    </tr>
+                                <?php endif; ?>
 
                                 </tbody>
 
@@ -113,6 +148,6 @@ $pageTitle = "Comunicados";
 </div>
 
 <?php
-include '../layouts/footer.php';
-include '../layouts/scripts.php';
+include '../app/views/layouts/footer.php';
+include '../app/views/layouts/scripts.php';
 ?>
