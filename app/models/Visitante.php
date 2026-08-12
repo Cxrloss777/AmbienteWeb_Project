@@ -9,13 +9,16 @@ class Visitante {
     }
 
     public function getActivos() {
-        $query = "SELECT * FROM visitantes WHERE estado = 'Dentro' ORDER BY fecha DESC, hora DESC";
+        $query = "SELECT * FROM visitantes
+                  WHERE estado = 'Dentro'
+                  ORDER BY id DESC";
         $result = $this->db->query($query);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getAll() {
-        $query = "SELECT * FROM visitantes ORDER BY fecha DESC, hora DESC";
+        $query = "SELECT * FROM visitantes
+                  ORDER BY id DESC";
         $result = $this->db->query($query);
         return $result->fetch_all(MYSQLI_ASSOC);
     }

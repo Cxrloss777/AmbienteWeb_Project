@@ -6,24 +6,25 @@ class VisitanteController extends Controller {
 
     public function __construct() {
         session_start();
+
         if (!isset($_SESSION['user_id'])) {
             $this->redirect('/auth/index');
         }
+
         $this->visitanteModel = $this->model('Visitante');
     }
 
     public function index() {
         $visitantes = $this->visitanteModel->getActivos();
-        $this->view('visitantes/index', ['visitantes' => $visitantes]);
-    }
 
-    public function historial() {
-        $visitantes = $this->visitanteModel->getAll();
-        $this->view('visitantes/historial', ['visitantes' => $visitantes]);
+        $this->view('visitantes/index', [
+            'visitantes' => $visitantes
+        ]);
     }
 
     public function create() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
             $data = [
                 'nombre' => $_POST['nombre'] ?? '',
                 'cedula' => $_POST['cedula'] ?? '',
@@ -37,21 +38,40 @@ class VisitanteController extends Controller {
                 'observaciones' => $_POST['observaciones'] ?? ''
             ];
 
-            if (!empty($data['nombre']) && !empty($data['cedula']) && !empty($data['apartamento'])) {
+            if (
+                !empty($data['nombre']) &&
+                !empty($data['cedula']) &&
+                !empty($data['visitado']) &&
+                !empty($data['apartamento']) &&
+                !empty($data['fecha']) &&
+                !empty($data['hora'])
+            ) {
                 $this->visitanteModel->create($data);
                 $this->redirect('/visitante/index');
             } else {
-                $this->view('visitantes/create', ['error' => 'Nombre, cédula y apartamento son obligatorios']);
+                $this->view('visitantes/create', [
+                    'error' => 'Nombre, cédula, persona visitada, apartamento, fecha y hora son obligatorios'
+                ]);
             }
+
         } else {
             $this->view('visitantes/create');
         }
+    }
+
+    public function historial() {
+        $visitantes = $this->visitanteModel->getAll();
+
+        $this->view('visitantes/historial', [
+            'visitantes' => $visitantes
+        ]);
     }
 
     public function salida($id = null) {
         if ($id) {
             $this->visitanteModel->registrarSalida($id);
         }
+
         $this->redirect('/visitante/index');
     }
 }
